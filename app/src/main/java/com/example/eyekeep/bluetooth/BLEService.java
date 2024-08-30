@@ -9,6 +9,8 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,11 +24,15 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.eyekeep.service.SendEmergencySituation;
 
+import java.util.UUID;
+
 public class BLEService extends Service {
     private BluetoothGatt bluetoothGatt;
     private final SendEmergencySituation sendEmergencySituation = new SendEmergencySituation();
 
     private static final String CHANNEL_ID = "BLEServiceChannel";
+
+    private final UUID READ_ONLY_UUID = UUID.fromString("00002a01-0000-1000-8000-00805f9b34fb");
 
     @Override
     public void onCreate() {
@@ -106,7 +112,51 @@ public class BLEService extends Service {
             @Override
             public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
-                    Log.i("BLEService", "BLE Services Discovered");
+                    Log.i("BluetoothParingActivity", "서비스 검색 성공. 발견된 서비스와 특성을 나열합니다:");
+
+                    for (BluetoothGattService service : gatt.getServices()) {
+                        UUID serviceUUID = service.getUuid();
+                        Log.i("BluetoothParingActivity", "서비스 UUID: " + serviceUUID.toString());
+
+                        for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
+                            UUID characteristicUUID = characteristic.getUuid();
+                            Log.i("BluetoothParingActivity", "  └ 특성 UUID: " + characteristicUUID.toString());
+
+                            // 특성의 속성을 확인하여 읽기, 쓰기, 알림 가능 여부를 출력
+                            int properties = characteristic.getProperties();
+                            StringBuilder propertiesString = new StringBuilder("    └ 속성: ");
+                            if ((properties & BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
+                                propertiesString.append("읽기 ");
+                            }
+                            if ((properties & BluetoothGattCharacteristic.PROPERTY_WRITE) > 0) {
+                                propertiesString.append("쓰기 ");
+                            }
+                            if ((properties & BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
+                                propertiesString.append("알림 ");
+                                setCharacteristicNotification(gatt, characteristic, true); // 알림 활성화
+                            }
+                            if ((properties & BluetoothGattCharacteristic.PROPERTY_INDICATE) > 0) {
+                                propertiesString.append("지시 ");
+                                setCharacteristicNotification(gatt, characteristic, true); // 지시 활성화
+                            }
+                            Log.i("BluetoothParingActivity", propertiesString.toString());
+                        }
+                    }
+                } else {
+                    Log.e("BluetoothParingActivity", "서비스 검색 실패. 상태 코드: " + status);
+                }
+            }
+
+            // 특성에 대한 알림을 활성화하는 메서드
+            private void setCharacteristicNotification(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, boolean enabled) {
+                if (ActivityCompat.checkSelfPermission(BLEService.this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                gatt.setCharacteristicNotification(characteristic, enabled);
+                BluetoothGattDescriptor descriptor = characteristic.getDescriptor(READ_ONLY_UUID);
+                if (descriptor != null) {
+                    descriptor.setValue(enabled ? BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE : BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE);
+                    gatt.writeDescriptor(descriptor);
                 }
             }
 

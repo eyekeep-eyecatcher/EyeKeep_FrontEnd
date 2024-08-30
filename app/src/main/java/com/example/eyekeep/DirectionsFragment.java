@@ -52,6 +52,8 @@ public class DirectionsFragment extends Fragment {
             // MainActivity로 가서 Fragment를 숨기도록 합니다.
             if (getActivity() instanceof MainChildActivity) {
                 ((MainChildActivity) getActivity()).hideDirectionsFragment();
+            } else if (getActivity() instanceof MainParentActivity) {
+                ((MainParentActivity) getActivity()).hideDirectionsFragment();
             }
         });
 
@@ -103,10 +105,12 @@ public class DirectionsFragment extends Fragment {
         FindPathDTO arrivalDTO = findLocationInArrivalList(arrival);
 
         if (departureDTO != null && arrivalDTO != null && getActivity() instanceof MainChildActivity) {
-            ((MainParentActivity) getActivity()).requestDirection(departureDTO, arrivalDTO);
             ((MainChildActivity) getActivity()).requestDirection(departureDTO, arrivalDTO);
 
+        } else if (departureDTO != null && arrivalDTO != null && getActivity() instanceof MainParentActivity) {
+            ((MainParentActivity) getActivity()).requestDirection(departureDTO, arrivalDTO);
         }
+        searchList.setVisibility(View.GONE);
     }
 
     private final TextWatcher textWatcher = new TextWatcher() {
@@ -180,7 +184,26 @@ public class DirectionsFragment extends Fragment {
                 adapter.notifyDataSetChanged(); // 어댑터에 변경 사항을 알려줍니다.
                 searchList.setVisibility(View.VISIBLE);
             });
+        } else if (getActivity() instanceof MainParentActivity) {
+            ((MainParentActivity) getActivity()).fetchSearchSuggestions(query, suggestions -> {
+                List<String> suggestionList = new ArrayList<>();
+                for (FindPathDTO findPathDTO : suggestions) {
+                    suggestionList.add(findPathDTO.getLocationName());
+                }
+                if (currentFocusedEditText == etDeparture) {
+                    searchDepartureResult.clear();
+                    searchDepartureResult.addAll(suggestions);
+                }
+                else {
+                    searchArrivalResult.clear();
+                    searchArrivalResult.addAll(suggestions);
+                }
+
+                adapter.clear();
+                adapter.addAll(suggestionList);
+                adapter.notifyDataSetChanged(); // 어댑터에 변경 사항을 알려줍니다.
+                searchList.setVisibility(View.VISIBLE);
+            });
         }
     }
-
 }

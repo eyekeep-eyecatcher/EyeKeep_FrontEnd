@@ -34,7 +34,6 @@ public class AuthorityActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_CODE = 100;
     private static final int NOTIFICATION_PERMISSION_CODE = 101;
     private static final int SMS_PERMISSION_CODE = 102;
-    private static final int BLUETOOTH_PERMISSION_CODE = 103;
 
     private boolean isLocationPermissionGranted = false;
     private boolean isNotificationPermissionGranted = false;
@@ -84,8 +83,6 @@ public class AuthorityActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, NOTIFICATION_PERMISSION_CODE);
         } else if (!isSmsPermissionGranted) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, SMS_PERMISSION_CODE);
-        } else if (!isBluetoothPermissionGranted) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH}, BLUETOOTH_PERMISSION_CODE);
         }
     }
 
@@ -106,11 +103,6 @@ public class AuthorityActivity extends AppCompatActivity {
             case SMS_PERMISSION_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     isSmsPermissionGranted = true;
-                }
-                break;
-            case BLUETOOTH_PERMISSION_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    isBluetoothPermissionGranted = true;
                 }
                 break;
         }

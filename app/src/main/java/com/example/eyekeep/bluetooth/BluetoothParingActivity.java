@@ -235,128 +235,126 @@ public class BluetoothParingActivity extends AppCompatActivity {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
-//    private void connectToBLEDevice(BluetoothDevice device) {
-//        Intent serviceIntent = new Intent(this, BLEService.class);
-//        serviceIntent.putExtra("BLE_DEVICE", device);
-//        ContextCompat.startForegroundService(this, serviceIntent);
-//    }
-
     private void connectToBLEDevice(BluetoothDevice device) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-        // BLE 연결 시도
-        bluetoothGatt = device.connectGatt(this, false, new BluetoothGattCallback() {
-
-            @Override
-            public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-                if (newState == BluetoothProfile.STATE_CONNECTED) {
-                    if (ActivityCompat.checkSelfPermission(BluetoothParingActivity.this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                        return;
-                    }
-                    Log.i("BluetoothParingActivity", "Connected to BLE device: " + device.getName());
-
-                    // 서비스 검색 시작
-                    boolean serviceDiscoveryStarted = gatt.discoverServices();
-                    if (serviceDiscoveryStarted) {
-                        Log.i("BluetoothParingActivity", "서비스 검색을 시작했습니다.");
-                    } else {
-                        Log.e("BluetoothParingActivity", "서비스 검색을 시작하지 못했습니다.");
-                    }
-                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                    Log.e("BluetoothParingActivity", "Disconnected from BLE device: " + device.getName() +
-                            " | Status: " + status + " | State: " + newState);
-                    runOnUiThread(() -> Toast.makeText(BluetoothParingActivity.this, "BLE 장치와의 연결이 해제되었습니다.", Toast.LENGTH_SHORT).show());
-                }
-            }
-
-            @Override
-            public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-                if (status == BluetoothGatt.GATT_SUCCESS) {
-                    Log.i("BluetoothParingActivity", "서비스 검색 성공. 발견된 서비스와 특성을 나열합니다:");
-
-                    for (BluetoothGattService service : gatt.getServices()) {
-                        UUID serviceUUID = service.getUuid();
-                        Log.i("BluetoothParingActivity", "서비스 UUID: " + serviceUUID.toString());
-
-                        for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
-                            UUID characteristicUUID = characteristic.getUuid();
-                            Log.i("BluetoothParingActivity", "  └ 특성 UUID: " + characteristicUUID.toString());
-
-                            // 특성의 속성을 확인하여 읽기, 쓰기, 알림 가능 여부를 출력
-                            int properties = characteristic.getProperties();
-                            StringBuilder propertiesString = new StringBuilder("    └ 속성: ");
-                            if ((properties & BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
-                                propertiesString.append("읽기 ");
-                            }
-                            if ((properties & BluetoothGattCharacteristic.PROPERTY_WRITE) > 0) {
-                                propertiesString.append("쓰기 ");
-                            }
-                            if ((properties & BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
-                                propertiesString.append("알림 ");
-                                setCharacteristicNotification(gatt, characteristic, true); // 알림 활성화
-                            }
-                            if ((properties & BluetoothGattCharacteristic.PROPERTY_INDICATE) > 0) {
-                                propertiesString.append("지시 ");
-                                setCharacteristicNotification(gatt, characteristic, true); // 지시 활성화
-                            }
-                            Log.i("BluetoothParingActivity", propertiesString.toString());
-                        }
-                    }
-                } else {
-                    Log.e("BluetoothParingActivity", "서비스 검색 실패. 상태 코드: " + status);
-                }
-            }
-
-            // 특성에 대한 알림을 활성화하는 메서드
-            private void setCharacteristicNotification(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, boolean enabled) {
-                if (ActivityCompat.checkSelfPermission(BluetoothParingActivity.this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                gatt.setCharacteristicNotification(characteristic, enabled);
-                BluetoothGattDescriptor descriptor = characteristic.getDescriptor(READ_ONLY_UUID);
-                if (descriptor != null) {
-                    descriptor.setValue(enabled ? BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE : BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE);
-                    gatt.writeDescriptor(descriptor);
-                }
-            }
-
-            @Override
-            public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-                // 알림을 통해 데이터 수신
-                byte[] data = characteristic.getValue();
-                String receivedMessage = new String(data);
-                Log.i("BluetoothParingActivity", "수신된 메시지: " + receivedMessage);
-                if (receivedMessage.equals("Q")) {
-                    sendEmergencySituation.sendEmergencySituation();
-                }
-
-
-                // 여기에서 받은 데이터를 처리하는 로직을 추가할 수 있습니다.
-            }
-
-        });
-
-
-
-
-    // 연결 대기 시간을 연장 (예: 20초)
-        new Handler().postDelayed(() -> {
-            if (bluetoothGatt != null) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-                if (bluetoothManager != null && bluetoothManager.getConnectionState(device, BluetoothProfile.GATT) == BluetoothProfile.STATE_DISCONNECTED) {
-                    Log.d("BluetoothPairingActivity", "Connection timeout, disconnecting...");
-                    bluetoothGatt.close();
-                    bluetoothGatt = null;
-                    Toast.makeText(this, "연결 시간이 초과되었습니다.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }, 60000); // 60초 대기
+        Intent serviceIntent = new Intent(this, BLEService.class);
+        serviceIntent.putExtra("BLE_DEVICE", device);
+        ContextCompat.startForegroundService(this, serviceIntent);
     }
+
+//    private void connectToBLEDevice(BluetoothDevice device) {
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+//            return;
+//        }
+//
+//        // BLE 연결 시도
+//        bluetoothGatt = device.connectGatt(this, false, new BluetoothGattCallback() {
+//
+//            @Override
+//            public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+//                if (newState == BluetoothProfile.STATE_CONNECTED) {
+//                    if (ActivityCompat.checkSelfPermission(BluetoothParingActivity.this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+//                        return;
+//                    }
+//                    Log.i("BluetoothParingActivity", "Connected to BLE device: " + device.getName());
+//
+//                    // 서비스 검색 시작
+//                    boolean serviceDiscoveryStarted = gatt.discoverServices();
+//                    if (serviceDiscoveryStarted) {
+//                        Log.i("BluetoothParingActivity", "서비스 검색을 시작했습니다.");
+//                    } else {
+//                        Log.e("BluetoothParingActivity", "서비스 검색을 시작하지 못했습니다.");
+//                    }
+//                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+//                    Log.e("BluetoothParingActivity", "Disconnected from BLE device: " + device.getName() +
+//                            " | Status: " + status + " | State: " + newState);
+//                    runOnUiThread(() -> Toast.makeText(BluetoothParingActivity.this, "BLE 장치와의 연결이 해제되었습니다.", Toast.LENGTH_SHORT).show());
+//                }
+//            }
+//
+//            @Override
+//            public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+//                if (status == BluetoothGatt.GATT_SUCCESS) {
+//                    Log.i("BluetoothParingActivity", "서비스 검색 성공. 발견된 서비스와 특성을 나열합니다:");
+//
+//                    for (BluetoothGattService service : gatt.getServices()) {
+//                        UUID serviceUUID = service.getUuid();
+//                        Log.i("BluetoothParingActivity", "서비스 UUID: " + serviceUUID.toString());
+//
+//                        for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
+//                            UUID characteristicUUID = characteristic.getUuid();
+//                            Log.i("BluetoothParingActivity", "  └ 특성 UUID: " + characteristicUUID.toString());
+//
+//                            // 특성의 속성을 확인하여 읽기, 쓰기, 알림 가능 여부를 출력
+//                            int properties = characteristic.getProperties();
+//                            StringBuilder propertiesString = new StringBuilder("    └ 속성: ");
+//                            if ((properties & BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
+//                                propertiesString.append("읽기 ");
+//                            }
+//                            if ((properties & BluetoothGattCharacteristic.PROPERTY_WRITE) > 0) {
+//                                propertiesString.append("쓰기 ");
+//                            }
+//                            if ((properties & BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
+//                                propertiesString.append("알림 ");
+//                                setCharacteristicNotification(gatt, characteristic, true); // 알림 활성화
+//                            }
+//                            if ((properties & BluetoothGattCharacteristic.PROPERTY_INDICATE) > 0) {
+//                                propertiesString.append("지시 ");
+//                                setCharacteristicNotification(gatt, characteristic, true); // 지시 활성화
+//                            }
+//                            Log.i("BluetoothParingActivity", propertiesString.toString());
+//                        }
+//                    }
+//                } else {
+//                    Log.e("BluetoothParingActivity", "서비스 검색 실패. 상태 코드: " + status);
+//                }
+//            }
+//
+//            // 특성에 대한 알림을 활성화하는 메서드
+//            private void setCharacteristicNotification(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, boolean enabled) {
+//                if (ActivityCompat.checkSelfPermission(BluetoothParingActivity.this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+//                    return;
+//                }
+//                gatt.setCharacteristicNotification(characteristic, enabled);
+//                BluetoothGattDescriptor descriptor = characteristic.getDescriptor(READ_ONLY_UUID);
+//                if (descriptor != null) {
+//                    descriptor.setValue(enabled ? BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE : BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE);
+//                    gatt.writeDescriptor(descriptor);
+//                }
+//            }
+//
+//            @Override
+//            public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+//                // 알림을 통해 데이터 수신
+//                byte[] data = characteristic.getValue();
+//                String receivedMessage = new String(data);
+//                Log.i("BluetoothParingActivity", "수신된 메시지: " + receivedMessage);
+//                if (receivedMessage.equals("Q")) {
+//                    sendEmergencySituation.sendEmergencySituation();
+//                }
+//
+//            }
+//
+//        });
+//
+//
+//
+//
+//    // 연결 대기 시간을 연장 (예: 20초)
+//        new Handler().postDelayed(() -> {
+//            if (bluetoothGatt != null) {
+//                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+//                    return;
+//                }
+//                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+//                if (bluetoothManager != null && bluetoothManager.getConnectionState(device, BluetoothProfile.GATT) == BluetoothProfile.STATE_DISCONNECTED) {
+//                    Log.d("BluetoothPairingActivity", "Connection timeout, disconnecting...");
+//                    bluetoothGatt.close();
+//                    bluetoothGatt = null;
+//                    Toast.makeText(this, "연결 시간이 초과되었습니다.", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        }, 60000); // 60초 대기
+//    }
 
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {

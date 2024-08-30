@@ -503,6 +503,8 @@ public class MainChildActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     public void hideDirectionsFragment() {
+        // 기존에 그려진 경로가 있으면 지웁니다.
+        clearExistingRoute();
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment != null) {
             getSupportFragmentManager().beginTransaction()
@@ -961,6 +963,7 @@ public class MainChildActivity extends AppCompatActivity implements OnMapReadyCa
 
         hideKeyboard();
         hideSearchList(); // 검색 리스트 숨기기
+        searchList.setVisibility(View.GONE);
 
     }
 
@@ -992,8 +995,10 @@ public class MainChildActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     public void drawRouteOnMap(List<LatLng> routePoints) {
+        // 기존에 그려진 경로가 있으면 지웁니다.
+        clearExistingRoute();
         // 경로를 따라 폴리라인을 그림
-        PolylineOverlay polyline = new PolylineOverlay();
+        polyline = new PolylineOverlay();
         polyline.setCoords(routePoints);
         polyline.setColor(Color.BLUE); // 경로의 색상을 설정합니다.
         polyline.setMap(naverMap);  // NaverMap 객체에 Polyline을 추가하여 경로를 그립니다.
@@ -1003,11 +1008,22 @@ public class MainChildActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void addArrowsOnRoute(List<LatLng> routePoints) {
-        ArrowheadPathOverlay arrowheadPathOverlay = new ArrowheadPathOverlay();
+        arrowheadPathOverlay = new ArrowheadPathOverlay();
         arrowheadPathOverlay.setCoords(routePoints);
         arrowheadPathOverlay.setColor(Color.BLUE); // 화살표의 색상 설정
         arrowheadPathOverlay.setMap(naverMap); // NaverMap 객체에 화살표를 추가하여 경로를 그립니다.
     }
+
+    private void clearExistingRoute() {
+        // 기존의 폴리라인과 화살표가 있으면 지도에서 제거합니다.
+        if (polyline != null) {
+            polyline.setMap(null);
+        }
+        if (arrowheadPathOverlay != null) {
+            arrowheadPathOverlay.setMap(null);
+        }
+    }
+
 
     private void setupMapClickListener() {
         naverMap.setOnMapClickListener((point, coord) -> {

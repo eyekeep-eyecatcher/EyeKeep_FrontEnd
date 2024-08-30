@@ -1,12 +1,16 @@
 package com.example.eyekeep.retrofit;
 
+import static com.example.eyekeep.BuildConfig.BASE_URL;
+import static com.example.eyekeep.BuildConfig.NAVER_GEOCODING_URL;
+import static com.example.eyekeep.BuildConfig.NAVER_SEARCH_URL;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
-    private static final String Base_URL = "http://192.168.219.112:8080";
-    private static final String NaverSearchURL = "https://openapi.naver.com";
-    private static final String NaverGeocodingURL = "https://naveropenapi.apigw.ntruss.com";
+    private static final String Base_URL = BASE_URL;
+    private static final String NaverSearchURL = NAVER_SEARCH_URL;
+    private static final String NaverGeocodingURL = NAVER_GEOCODING_URL;
     private static Retrofit retrofit = null;
 
     public static Retrofit getRetrofitInstance() {
