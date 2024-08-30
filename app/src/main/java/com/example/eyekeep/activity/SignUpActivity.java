@@ -32,7 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LogintestActivity2 extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity {
     private EditText etEmail, etPassword, etPasswordCheck, etNickName;
     private TextView wrongEmail, wrongPassword, wrongPasswordCheck, wrongNickname;
     private AppCompatButton btnRegister;
@@ -42,7 +42,7 @@ public class LogintestActivity2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_logintest2);
+        setContentView(R.layout.activity_register);
 
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
@@ -58,7 +58,7 @@ public class LogintestActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // 로그인 화면으로 이동
-                Intent intent = new Intent(LogintestActivity2.this, LogintestActivity.class);
+                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
@@ -174,8 +174,8 @@ public class LogintestActivity2 extends AppCompatActivity {
                     String message = response.body().get("message").toString();
                     switch (message) {
                         case "Success" :
-                            Toast.makeText(LogintestActivity2.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LogintestActivity2.this, LogintestActivity.class);
+                            Toast.makeText(SignUpActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                             startActivity(intent);
                             break;
 
@@ -205,8 +205,8 @@ public class LogintestActivity2 extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {
                 Log.e("NetworkError", "Error occurred: " + t.getMessage());
-                Toast.makeText(LogintestActivity2.this, "네트워크 에러", Toast.LENGTH_SHORT).show();
-                new AlertDialog.Builder(LogintestActivity2.this)
+                Toast.makeText(SignUpActivity.this, "네트워크 에러", Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(SignUpActivity.this)
                         .setTitle("오류 발생")
                         .setMessage("앱에 오류가 발생하여 종료됩니다.")
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {

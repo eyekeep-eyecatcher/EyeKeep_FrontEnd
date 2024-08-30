@@ -35,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LogintestActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private EditText etEmail, etPassword;
     private AppCompatButton btnLogin, btnRegister;
     private TextView worngEmailPassword;
@@ -44,7 +44,7 @@ public class LogintestActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_logintest);
+        setContentView(R.layout.activity_login);
 
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
@@ -56,7 +56,7 @@ public class LogintestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // 회원가입 화면으로 이동
-                Intent intent = new Intent(LogintestActivity.this, LogintestActivity2.class);
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent);
             }
         });
@@ -99,14 +99,14 @@ public class LogintestActivity extends AppCompatActivity {
                     checkTokenRole();
                 } else {
                     worngEmailPassword.setVisibility(View.VISIBLE);
-                    Toast.makeText(LogintestActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {
                 Log.e("NetworkError", "Error occurred: " + t.getMessage());
-                new AlertDialog.Builder(LogintestActivity.this)
+                new AlertDialog.Builder(LoginActivity.this)
                         .setTitle("오류 발생")
                         .setMessage("앱에 오류가 발생하여 종료됩니다.")
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -131,12 +131,12 @@ public class LogintestActivity extends AppCompatActivity {
                     // role  선택까지 완료된 사용자일 경우 메인 화면으로 이동.
                     String role = response.body().get("message").toString();
                     if (role.equals("Parent")) {
-                        Intent intent = new Intent(LogintestActivity.this, MainParentActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainParentActivity.class);
                         startActivity(intent);
                         finish(); //현재 액티비티 파괴
                     }
                     else if (role.equals("Child")) {
-                        Intent intent = new Intent(LogintestActivity.this, MainChildActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainChildActivity.class);
                         startActivity(intent);
                         finish(); //현재 액티비티 파괴
                     }
@@ -152,7 +152,7 @@ public class LogintestActivity extends AppCompatActivity {
                     }
                     else if (statusCode == 403) {
                         // role 선택이 안된 사용자일 경우 role 선택 화면으로 이동
-                        Intent intent = new Intent(LogintestActivity.this, AuthorityActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, AuthorityActivity.class);
                         startActivity(intent);
                         finish();
                     }
@@ -162,7 +162,7 @@ public class LogintestActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {
                 Log.e("NetworkError", "Error occurred: " + t.getMessage());
-                new AlertDialog.Builder(LogintestActivity.this)
+                new AlertDialog.Builder(LoginActivity.this)
                         .setTitle("오류 발생")
                         .setMessage("앱에 오류가 발생하여 종료됩니다.")
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -193,14 +193,14 @@ public class LogintestActivity extends AppCompatActivity {
                     Log.e("HttpRequestError", "Reissue failed with status code: " + statusCode);
                     // 토큰에 문제가 있기에 저장된 토큰 삭제.
                     Utils.clearToken();
-                    Toast.makeText(LogintestActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {
                 Log.e("NetworkError", "Error occurred: " + t.getMessage());
-                new AlertDialog.Builder(LogintestActivity.this)
+                new AlertDialog.Builder(LoginActivity.this)
                         .setTitle("오류 발생")
                         .setMessage("앱에 오류가 발생하여 종료됩니다.")
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {

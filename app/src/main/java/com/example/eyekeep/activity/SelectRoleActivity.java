@@ -149,7 +149,7 @@ public class SelectRoleActivity extends AppCompatActivity {
                             .setMessage("로그인 정보가 말소되어 재로그인이 필요합니다.")
                             .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(SelectRoleActivity.this, LogintestActivity.class);
+                                    Intent intent = new Intent(SelectRoleActivity.this, LoginActivity.class);
                                     startActivity(intent);
                                     finish(); // 현재 액티비티 종료
                                 }

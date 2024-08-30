@@ -126,7 +126,7 @@ public class LodingActivity extends AppCompatActivity {
                     int statusCode = response.code();
                     Log.e("HttpRequestError", "Reissue failed with status code: " + statusCode);
 
-                    Intent intent = new Intent(LodingActivity.this, LogintestActivity.class);
+                    Intent intent = new Intent(LodingActivity.this, LoginActivity.class);
                     startActivity(intent);
                     finish();
                 }

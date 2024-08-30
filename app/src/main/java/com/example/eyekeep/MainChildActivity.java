@@ -39,7 +39,7 @@ import com.example.eyekeep.DTO.FindPathDTO;
 import com.example.eyekeep.DTO.RoadNodeDTO;
 import com.example.eyekeep.DTO.SearchGeocodingDTO;
 import com.example.eyekeep.DTO.SearchNaverDTO;
-import com.example.eyekeep.activity.LogintestActivity;
+import com.example.eyekeep.activity.LoginActivity;
 import com.example.eyekeep.bookmark.BookmarkChildAdapter;
 import com.example.eyekeep.fetchSafetyData.FetchChildrenGuardHouse;
 import com.example.eyekeep.fetchSafetyData.FetchCCTV;
@@ -503,6 +503,8 @@ public class MainChildActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     public void hideDirectionsFragment() {
+        // 기존에 그려진 경로가 있으면 지웁니다.
+        clearExistingRoute();
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment != null) {
             getSupportFragmentManager().beginTransaction()
@@ -588,7 +590,7 @@ public class MainChildActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     public void signout() {
-        Intent intent = new Intent(MainChildActivity.this, LogintestActivity.class);
+        Intent intent = new Intent(MainChildActivity.this, LoginActivity.class);
         startActivity(intent);
         finish(); //현재 액티비티 파괴
         clearToken();
@@ -961,6 +963,7 @@ public class MainChildActivity extends AppCompatActivity implements OnMapReadyCa
 
         hideKeyboard();
         hideSearchList(); // 검색 리스트 숨기기
+        searchList.setVisibility(View.GONE);
 
     }
 
@@ -992,8 +995,10 @@ public class MainChildActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     public void drawRouteOnMap(List<LatLng> routePoints) {
+        // 기존에 그려진 경로가 있으면 지웁니다.
+        clearExistingRoute();
         // 경로를 따라 폴리라인을 그림
-        PolylineOverlay polyline = new PolylineOverlay();
+        polyline = new PolylineOverlay();
         polyline.setCoords(routePoints);
         polyline.setColor(Color.BLUE); // 경로의 색상을 설정합니다.
         polyline.setMap(naverMap);  // NaverMap 객체에 Polyline을 추가하여 경로를 그립니다.
@@ -1003,11 +1008,22 @@ public class MainChildActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void addArrowsOnRoute(List<LatLng> routePoints) {
-        ArrowheadPathOverlay arrowheadPathOverlay = new ArrowheadPathOverlay();
+        arrowheadPathOverlay = new ArrowheadPathOverlay();
         arrowheadPathOverlay.setCoords(routePoints);
         arrowheadPathOverlay.setColor(Color.BLUE); // 화살표의 색상 설정
         arrowheadPathOverlay.setMap(naverMap); // NaverMap 객체에 화살표를 추가하여 경로를 그립니다.
     }
+
+    private void clearExistingRoute() {
+        // 기존의 폴리라인과 화살표가 있으면 지도에서 제거합니다.
+        if (polyline != null) {
+            polyline.setMap(null);
+        }
+        if (arrowheadPathOverlay != null) {
+            arrowheadPathOverlay.setMap(null);
+        }
+    }
+
 
     private void setupMapClickListener() {
         naverMap.setOnMapClickListener((point, coord) -> {
@@ -1167,30 +1183,6 @@ public class MainChildActivity extends AppCompatActivity implements OnMapReadyCa
             return true; // true를 반환하면 다른 이벤트는 처리되지 않음
         });
     }
-
-//    public void updateBookmarkMarkersOnMap(BookMarkDTO bookmark) {
-//        for (Marker marker : bookmarkMarkers) {
-//            if(marker.getTag() == null) {
-//                // 기존 alias가 없었던 경우
-//                if(marker.getCaptionText().equals(bookmark.getLocationName())) {
-//                    marker.setMap(null);
-//                    marker.setCaptionText(bookmark.getAlias());
-//                    marker.setTag(bookmark.getLocationName());
-//                    //marker.setMap(naverMap);
-//                    break;
-//                }
-//            }
-//            else { // 기존 alias가 있을 경우
-//                if(marker.getTag().toString().equals(bookmark.getLocationName())) {
-//                    marker.setMap(null);
-//                    marker.setCaptionText(bookmark.getAlias());
-//                    marker.setTag(bookmark.getLocationName());
-//                    //marker.setMap(naverMap);
-//                    break;
-//                }
-//            }
-//        }
-//    }
 
     public void updateBookmarkMarkersOnMap(BookMarkDTO bookmark) {
         for (Marker marker : bookmarkMarkers) {

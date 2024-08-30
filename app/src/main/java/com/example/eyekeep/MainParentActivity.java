@@ -53,7 +53,7 @@ import com.example.eyekeep.DTO.FindPathDTO;
 import com.example.eyekeep.DTO.RoadNodeDTO;
 import com.example.eyekeep.DTO.SearchGeocodingDTO;
 import com.example.eyekeep.DTO.SearchNaverDTO;
-import com.example.eyekeep.activity.LogintestActivity;
+import com.example.eyekeep.activity.LoginActivity;
 import com.example.eyekeep.bookmark.BookmarkParentAdapter;
 import com.example.eyekeep.bookmark.RequestParentBookMark;
 import com.example.eyekeep.fetchSafetyData.FetchAccidentBlackSpot;
@@ -156,6 +156,9 @@ public class MainParentActivity extends AppCompatActivity implements OnMapReadyC
 
     private boolean isDirectionFragmentVisible = false;
     private FrameLayout fragmentContainer;
+    // 기존 경로와 화살표를 클래스 멤버 변수로 저장합니다.
+    private PolylineOverlay polyline;
+    private ArrowheadPathOverlay arrowheadPathOverlay;
 
 
     private final BroadcastReceiver fcmMessageReceiver = new BroadcastReceiver() {
@@ -501,6 +504,8 @@ public class MainParentActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     public void hideDirectionsFragment() {
+        // 기존에 그려진 경로가 있으면 지웁니다.
+        clearExistingRoute();
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment != null) {
             getSupportFragmentManager().beginTransaction()
@@ -571,9 +576,11 @@ public class MainParentActivity extends AppCompatActivity implements OnMapReadyC
 
     }
 
-    public void drawRouteOnMap(List<LatLng> routePoints) {
+        public void drawRouteOnMap(List<LatLng> routePoints) {
+        // 기존에 그려진 경로가 있으면 지웁니다.
+        clearExistingRoute();
         // 경로를 따라 폴리라인을 그림
-        PolylineOverlay polyline = new PolylineOverlay();
+        polyline = new PolylineOverlay();
         polyline.setCoords(routePoints);
         polyline.setColor(Color.BLUE); // 경로의 색상을 설정합니다.
         polyline.setMap(naverMap);  // NaverMap 객체에 Polyline을 추가하여 경로를 그립니다.
@@ -582,15 +589,26 @@ public class MainParentActivity extends AppCompatActivity implements OnMapReadyC
         addArrowsOnRoute(routePoints);
     }
 
+
     private void addArrowsOnRoute(List<LatLng> routePoints) {
-        ArrowheadPathOverlay arrowheadPathOverlay = new ArrowheadPathOverlay();
+        arrowheadPathOverlay = new ArrowheadPathOverlay();
         arrowheadPathOverlay.setCoords(routePoints);
         arrowheadPathOverlay.setColor(Color.BLUE); // 화살표의 색상 설정
         arrowheadPathOverlay.setMap(naverMap); // NaverMap 객체에 화살표를 추가하여 경로를 그립니다.
     }
 
+    private void clearExistingRoute() {
+        // 기존의 폴리라인과 화살표가 있으면 지도에서 제거합니다.
+        if (polyline != null) {
+            polyline.setMap(null);
+        }
+        if (arrowheadPathOverlay != null) {
+            arrowheadPathOverlay.setMap(null);
+        }
+    }
+
     public void signout() {
-        Intent intent = new Intent(MainParentActivity.this, LogintestActivity.class);
+        Intent intent = new Intent(MainParentActivity.this, LoginActivity.class);
         startActivity(intent);
         finish(); //현재 액티비티 파괴
         clearToken();
@@ -780,9 +798,9 @@ public class MainParentActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     // 검색 제안 가져오기 메서드
-    private void fetchSearchSuggestions(String query) {
+    public void fetchSearchSuggestions(String query) {
         SearchService service = RetrofitClient.getRetrofitInstanceSearchNaver().create(SearchService.class);
-        Call<SearchNaverDTO> call = service.searchNaver(BuildConfig.NAVER_SEARCH_CLIENT_ID, BuildConfig.NAVER_SEARCH_API_KEY, query, 5, 1, "random");
+        Call<SearchNaverDTO> call = service.searchNaver(BuildConfig.NAVER_SEARCH_API_KEY, BuildConfig.NAVER_SEARCH_CLIENT_ID, query, 5, 1, "random");
 
         call.enqueue(new Callback<SearchNaverDTO>() {
             @Override
@@ -791,7 +809,134 @@ public class MainParentActivity extends AppCompatActivity implements OnMapReadyC
             }
             @Override
             public void onFailure(@NonNull Call<SearchNaverDTO> call, @NonNull Throwable t) {
-                Toast.makeText(MainParentActivity.this, "검색 실패: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+    // 콜백 인터페이스 정의
+    public interface OnSuggestionsFetchedListener {
+        void onSuggestionsFetched(List<FindPathDTO> suggestions);
+    }
+
+    // 새로운 메서드 오버로드
+    public void fetchSearchSuggestions(String query, MainParentActivity.OnSuggestionsFetchedListener listener) {
+        SearchService service = RetrofitClient.getRetrofitInstanceSearchNaver().create(SearchService.class);
+        Call<SearchNaverDTO> call = service.searchNaver(BuildConfig.NAVER_SEARCH_CLIENT_ID, BuildConfig.NAVER_SEARCH_API_KEY, query, 5, 1, "random");
+
+        call.enqueue(new Callback<SearchNaverDTO>() {
+            @Override
+            public void onResponse(@NonNull Call<SearchNaverDTO> call, @NonNull Response<SearchNaverDTO> response) {
+                List<FindPathDTO> suggestions = new ArrayList<>();
+
+                if (!response.isSuccessful()) {
+                    int statusCode = response.code();
+                    String errorMessage = response.message();
+                    Log.e("SearchNaverError", "Error code : Code " + statusCode + " - " + errorMessage);
+                    return;
+                }
+
+                SearchNaverDTO data = response.body();
+                List<SearchNaverDTO.Item> items = data != null ? data.getItems() : null;
+
+                if (items == null || items.isEmpty()) {
+                    searchAddress(query, listener);
+                    return;
+                }
+
+                for (SearchNaverDTO.Item item : items) {
+                    try {
+                        double longitude = Double.parseDouble(item.getMapx()) / 10_000_000;
+                        double latitude = Double.parseDouble(item.getMapy()) / 10_000_000;
+                        String name = item.getTitle().replaceAll("<[^>]*>", "");
+
+                        FindPathDTO findPathDTO = new FindPathDTO();
+                        findPathDTO.setLocationName(name);
+                        findPathDTO.setLongitude(longitude);
+                        findPathDTO.setLatitude(latitude);
+
+                        suggestions.add(findPathDTO);
+
+                    } catch (NumberFormatException e) {
+                        Log.e("SearchNaverError", "NumberFormatException: " + e.getMessage());
+                        return;
+                    }
+                }
+
+                listener.onSuggestionsFetched(suggestions);
+            }
+
+
+            @Override
+            public void onFailure(@NonNull Call<SearchNaverDTO> call, @NonNull Throwable t) {
+                Log.e("NetworkError", "Search naver error occurred: " + t.getMessage());
+            }
+        });
+    }
+
+    // 메서드 오버로드
+    public void searchAddress(String query, MainParentActivity.OnSuggestionsFetchedListener listener) {
+        SearchService service = RetrofitClient.getRetrofitInstanceSearchGeocoding().create(SearchService.class);
+        Call<SearchGeocodingDTO> call = service.searchAddress(BuildConfig.NAVER_MAP_CLIENT_ID, BuildConfig.NAVER_MAP_API_KEY, query, 1);
+        call.enqueue(new Callback<SearchGeocodingDTO>() {
+            @Override
+            public void onResponse(@NonNull Call<SearchGeocodingDTO> call, @NonNull Response<SearchGeocodingDTO> response) {
+                List<FindPathDTO> suggestions = new ArrayList<>();
+                SearchGeocodingDTO data = response.body();
+                String status = data != null ? data.getStatus() : null;
+                if (!response.isSuccessful() || !Objects.equals(status, "OK")) {
+                    // 응답이 성공적이지 않을 때의 처리
+                    int statusCode = response.code(); // HTTP 상태 코드
+                    String errorMessage = data != null ? data.getErrorMessage() : null; // HTTP 상태 메시지
+                    Log.e("SearchAddressError", "Error code : Code " + statusCode + " - " + errorMessage);
+                    return;
+                }
+
+                List<SearchGeocodingDTO.addressList> items = data.getAddresses();
+
+                // items 리스트가 비어있거나 null인 경우 처리
+                if (items == null || items.isEmpty()) {
+                    Log.e("SearchAddressError", "Items list is empty or null");
+                    return;
+                }
+
+                SearchGeocodingDTO.addressList item = items.get(0);
+                String roadAddress = item.getRoadAddress(); // "서울특별시 중랑구 면목로84길 37"
+                String jibunAddress = item.getJibunAddress(); // "서울특별시 중랑구 면목동 1287-1"
+                String displayAddress;
+                if (Objects.equals(roadAddress, "")) {
+                    displayAddress = jibunAddress;
+                } else if (Objects.equals(jibunAddress, "")) {
+                    displayAddress = roadAddress;
+                } else { // 도로명 주소, 구주소 모두 있을 경우 도로명 주소 사용.
+                    displayAddress = roadAddress;
+                }
+
+                try {
+                    // 첫 번째 아이템의 mapx, mapy 값을 가져와서 double로 변환
+                    double longitude = Double.parseDouble(item.getLongitude()); // 경도
+                    double latitude = Double.parseDouble(item.getLatitude());  // 위도
+
+                    FindPathDTO findPathDTO = new FindPathDTO();
+                    findPathDTO.setLocationName(displayAddress);
+                    findPathDTO.setLongitude(longitude);
+                    findPathDTO.setLatitude(latitude);
+
+                    suggestions.add(findPathDTO);
+
+                } catch (NumberFormatException e) {
+                    // 문자열을 double로 변환하는 데 실패한 경우
+                    Log.e("SearchAddressError", "NumberFormatException: " + e.getMessage());
+                    return;
+                }
+
+
+                listener.onSuggestionsFetched(suggestions);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<SearchGeocodingDTO> call, @NonNull Throwable t) {
+                Log.e("NetworkError", "Search address error occurred: " + t.getMessage());
             }
         });
     }
@@ -846,6 +991,7 @@ public class MainParentActivity extends AppCompatActivity implements OnMapReadyC
         // 키보드 숨기기
         hideKeyboard();
         hideSearchList(); // 검색 리스트 숨기기
+        searchList.setVisibility(View.GONE);
     }
 
     private void hideSearchList() {
@@ -1002,30 +1148,6 @@ public class MainParentActivity extends AppCompatActivity implements OnMapReadyC
             return true; // true를 반환하면 다른 이벤트는 처리되지 않음
         });
     }
-
-//    public void updateBookmarkMarkersOnMap(BookMarkDTO bookmark) {
-//        for (Marker marker : bookmarkMarkers) {
-//            if(marker.getTag() == null) {
-//                // 기존 alias가 없었던 경우
-//                if(marker.getCaptionText().equals(bookmark.getLocationName())) {
-//                    marker.setMap(null);
-//                    marker.setCaptionText(bookmark.getAlias());
-//                    marker.setTag(bookmark.getLocationName());
-//                    //marker.setMap(naverMap);
-//                    break;
-//                }
-//            }
-//            else { // 기존 alias가 있을 경우
-//                if(marker.getTag().toString().equals(bookmark.getLocationName())) {
-//                    marker.setMap(null);
-//                    marker.setCaptionText(bookmark.getAlias());
-//                    marker.setTag(bookmark.getLocationName());
-//                    //marker.setMap(naverMap);
-//                    break;
-//                }
-//            }
-//        }
-//    }
 
     public void updateBookmarkMarkersOnMap(BookMarkDTO bookmark) {
         for (Marker marker : bookmarkMarkers) {

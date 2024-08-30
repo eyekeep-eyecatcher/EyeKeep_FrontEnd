@@ -21,10 +21,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" /> <!-- 페어링된 기기를 확인하기 위한 권환 -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" /> <!-- Android 11 이하에서 사용되는 블루투스 권한 -->
-
-    <uses-permission
-        android:name="android.permission.BLUETOOTH_ADMIN"
-        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:allowBackup="true"
@@ -34,7 +32,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Kest2"
+        android:theme="@style/Theme.Eyekeep"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
@@ -60,7 +58,8 @@
         <service
             android:name=".bluetooth.BLEService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice"/>
 
         <activity
             android:name=".activity.LodingActivity"
@@ -76,16 +75,17 @@
             android:name=".bluetooth.BluetoothParingActivity"
             android:exported="true">
 
+
         </activity>
 
         <activity
             android:name=".activity.SelectRoleActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.LogintestActivity2"
+            android:name=".activity.SignUpActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.LogintestActivity"
+            android:name=".activity.LoginActivity"
             android:exported="true">
 
         </activity>
@@ -103,6 +103,7 @@
         <activity
             android:name=".MainChildActivity"
             android:exported="true">
+
 
         </activity>
     </application>

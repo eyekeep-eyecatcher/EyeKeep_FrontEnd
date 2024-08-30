@@ -12,6 +12,9 @@ val naverMapClientId: String = localProperties.getProperty("NAVER_MAP_CLIENT_ID"
 val naverMapApiKey: String = localProperties.getProperty("NAVER_MAP_API_KEY") ?: ""
 val naverSearchClientId: String = localProperties.getProperty("NAVER_SEARCH_CLIENT_ID") ?: ""
 val naverSearchApiKey: String = localProperties.getProperty("NAVER_SEARCH_API_KEY") ?: ""
+val naverSearchURL: String = localProperties.getProperty("NAVER_SEARCH_URL") ?: ""
+val naverGeocodingURL: String = localProperties.getProperty("NAVER_GEOCODING_URL") ?: ""
+val base_URL: String = localProperties.getProperty("BASE_URL") ?: ""
 
 android {
     namespace = "com.example.eyekeep"
@@ -35,6 +38,9 @@ android {
         buildConfigField("String", "NAVER_MAP_API_KEY", "\"$naverMapApiKey\"")
         buildConfigField("String", "NAVER_SEARCH_CLIENT_ID", "\"$naverSearchClientId\"")
         buildConfigField("String", "NAVER_SEARCH_API_KEY", "\"$naverSearchApiKey\"")
+        buildConfigField("String", "NAVER_SEARCH_URL", "\"$naverSearchURL\"")
+        buildConfigField("String", "NAVER_GEOCODING_URL", "\"$naverGeocodingURL\"")
+        buildConfigField("String", "BASE_URL", "\"$base_URL\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
