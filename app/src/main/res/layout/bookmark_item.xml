@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <!-- 북마크 제목 -->
+        <TextView
+            android:id="@+id/bookmark_name"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/image_bookmark_marker"
+            android:text=""
+            android:textSize="16sp" />
+
+        <!-- 수정 버튼 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_bookmark_edit"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/edittext_email_pwd"
+            android:text="수정"
+            android:textColor="@color/gray"/>
+
+        <!-- 삭제 버튼 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_bookmark_delete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/edittext_email_pwd"
+            android:text="삭제"
+            android:textColor="@color/gray"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainParentActivity">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/naverMap"
+        android:name="com.naver.maps.map.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:navermap_locationButtonEnabled="true"
+        app:navermap_tiltGesturesEnabled="false"
+        app:layout_constraintBottom_toTopOf="@+id/bottomlayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="50dp"
+        android:background="@color/white"
+        android:backgroundTint="@color/white"
+        android:focusable="true"
+        android:padding="0dp"
+        app:iconifiedByDefault="false"
+        app:layout_constraintEnd_toStartOf="@+id/start_direction"
+        app:layout_constraintHorizontal_bias="0.144"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="1"
+        app:queryHint="장소 및 주소 검색" />
+
+    <ListView
+        android:id="@+id/searchList"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchView"
+        android:background="@android:color/white"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:elevation="4dp"
+        android:padding="10dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/searchView"
+        app:layout_constraintStart_toStartOf="@+id/searchView"
+        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+
+    <LinearLayout
+        android:id="@+id/bottomlayout"
+        android:layout_width="0dp"
+        android:layout_height="90dp"
+        android:backgroundTint="@color/white"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="#80000000">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_safety_map"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/image_btn_safety_map_menu"
+            android:drawablePadding="5dp"
+            android:padding="15dp"
+            android:text="안전지도"
+            android:background="@color/white"
+            android:textColor="#000000"
+            android:textColorLink="#FFFFFF"
+            android:textSize="8dp"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_book_mark"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/image_btn_bookmark_menu"
+            android:drawablePadding="5dp"
+            android:padding="15dp"
+            android:text="북마크"
+            android:background="@color/white"
+            android:textColor="#000000"
+            android:textColorLink="#FFFFFF"
+            android:textSize="8dp"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_my_info"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/image_btn_my_information_menu"
+            android:drawablePadding="5dp"
+            android:padding="15dp"
+            android:text="내정보"
+            android:background="@color/white"
+            android:textColor="#000000"
+            android:textColorLink="#FFFFFF"
+            android:textSize="8dp"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_eyekeep_menu"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/image_btn_eyekeep_menu"
+            android:drawablePadding="5dp"
+            android:padding="15dp"
+            android:text="친구"
+            android:background="@color/white"
+            android:textColor="#000000"
+            android:textColorLink="#FFFFFF"
+            android:textSize="8dp" />
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/start_direction"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="18dp"
+        android:background="@drawable/map_button_get_direction"
+        android:drawableTop="@drawable/get_direction"
+        android:padding="5dp"
+        android:text="길찾기"
+        android:textColor="@color/white"
+        android:textSize="9dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btn_map_book_mark_mini"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="26dp"
+        android:background="@drawable/map_circle_button"
+        app:layout_constraintEnd_toEndOf="@+id/start_direction"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/start_direction"
+        app:layout_constraintTop_toBottomOf="@+id/start_direction"
+        app:srcCompat="@drawable/book_mark_mini" />
+
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btn_eyekeep_location"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/map_circle_button"
+        app:layout_constraintEnd_toEndOf="@+id/start_direction"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/start_direction"
+        app:layout_constraintTop_toBottomOf="@+id/btn_map_book_mark_mini"
+        app:srcCompat="@drawable/image_btn_eyekeep_location" />
+
+    <FrameLayout
+        android:id="@+id/overlay_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/bottomlayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" /> <!-- 초기에는 보이지 않도록 설정 -->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

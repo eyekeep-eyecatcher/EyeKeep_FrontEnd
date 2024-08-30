@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:minWidth="300dp"
+    android:padding="10dp"
+    android:background="@drawable/custom_dialog_legend_explanation"
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
+
+        <TextView
+            android:id="@+id/dialog_text"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:text="안전지도 레이어 범례 및 출처"
+            android:textSize="13sp"
+            android:textColor="@android:color/holo_green_light"
+            android:layout_marginTop="15dp"
+
+            />
+        <ImageButton
+            android:id="@+id/dialog_close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/image_btn_close_tab"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            />
+    </LinearLayout>
+
+
+
+    <!-- 설명 텍스트 -->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
+
+    <TextView
+        android:id="@+id/dialog_text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="보안등(국토교통부)"
+        android:textSize="13sp"
+        android:textColor="@android:color/white"
+        />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
+
+        <TextView
+            android:id="@+id/dialog_text2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CCTV(서울특별시)"
+            android:textSize="13sp"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
+
+        <TextView
+            android:id="@+id/dialog_tex3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="경찰서(경찰청)"
+            android:textSize="13sp"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
+
+        <TextView
+            android:id="@+id/dialog_text4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="아동안전지킴이집(경찰청)"
+            android:textSize="13sp"
+
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/dialog_text4.5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="경찰과 지역사회가 함께 아동을 보호하는 민/경 합동 치안\n시스템, 편의점 등 "
+            android:textSize="10sp"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
+
+        <TextView
+            android:id="@+id/dialog_text5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="안전비상벨(행정안전부)"
+            android:textSize="13sp"
+            android:textColorLink="@color/white"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/dialog_text5.5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="범죄예방대책의 일환으로 설치되는 즉각 신고 시스템"
+            android:textSize="10sp"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
+
+        <TextView
+            android:id="@+id/dialog_text6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="아동보호구역"
+            android:textSize="13sp"
+            android:textColorLink="@color/white"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/dialog_text6.5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="범죄의 위험으로부터 아동을 보호하기 위해 특정 시설의 주\n변 구역을 지정하여 범죄의 예방을 위한 구역"
+            android:textSize="10sp"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp">
+
+        <TextView
+            android:id="@+id/dialog_text7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="사고다발구역"
+            android:textSize="13sp"
+            android:textColorLink="@color/white"
+            android:textColor="@android:color/white" />
+
+
+
+    </LinearLayout>
+
+
+
+    <!-- 닫기 버튼 -->
+
+
+</LinearLayout>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_authritiy"
+    tools:context=".activity.AuthorityActivity">
+
+
+
+    <TextView
+        android:id="@+id/eye_keep"
+        android:layout_width="235.2dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:text="@string/eye_keep"
+        android:fontFamily="@font/modak"
+        android:textColor="@color/white"
+        android:textSize="50dp"
+        android:textAlignment="center"
+        android:textAppearance="@style/eyekeep"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="아이 : 킵"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/eye_keep"
+        app:layout_constraintTop_toBottomOf="@+id/eye_keep" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:gravity="right"
+        android:text="내아이를 안전하게"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/eye_keep"
+        app:layout_constraintTop_toBottomOf="@+id/eye_keep" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="50dp"
+        android:text="접근 권한"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+
+
+    <ImageView
+        android:id="@+id/authority_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:srcCompat="@drawable/image_view_authority_location" />
+
+    <TextView
+        android:id="@+id/tv_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="위치"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/authority_location"
+        app:layout_constraintTop_toTopOf="@+id/authority_location" />
+
+    <TextView
+        android:id="@+id/tv_location_ex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:text="현재 위치를 기반으로 실시간 지도 서비스를 이용할 수 있\n습니다."
+        android:textSize="10sp"
+        app:layout_constraintStart_toEndOf="@+id/authority_location"
+        app:layout_constraintTop_toBottomOf="@+id/tv_location" />
+
+    <ImageView
+        android:id="@+id/authority_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="@+id/authority_location"
+        app:layout_constraintTop_toBottomOf="@+id/authority_location"
+        app:srcCompat="@drawable/image_view_authority_alram" />
+
+
+
+
+    <TextView
+        android:id="@+id/tv_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="알림"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@+id/authority_alarm"
+        app:layout_constraintTop_toTopOf="@+id/authority_alarm" />
+
+    <TextView
+        android:id="@+id/tv_alarm_ex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아이킵 등록 요청 알림, 위급 상황 알림 등의 기능을 이용\n할 수 있습니다."
+        android:textSize="10sp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@+id/authority_alarm"
+        app:layout_constraintTop_toBottomOf="@+id/tv_alarm" />
+
+    <ImageView
+        android:id="@+id/authority_sms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="@+id/authority_alarm"
+        app:layout_constraintTop_toBottomOf="@+id/authority_alarm"
+        app:srcCompat="@drawable/image_view_authority_sns" />
+
+    <TextView
+        android:id="@+id/tv_sms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SMS"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@+id/authority_sms"
+        app:layout_constraintTop_toTopOf="@+id/authority_sms" />
+
+    <TextView
+        android:id="@+id/tv_sms_ex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아이캐처 사용자의 경우 위험 상황에서 지정된 번호 및 인\n근 경찰서로 자동으로 문자를 보낼 수 있습니다."
+        android:textSize="10sp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@+id/authority_sms"
+        app:layout_constraintTop_toBottomOf="@+id/tv_sms" />
+
+
+    <ImageView
+        android:id="@+id/authority_bluetooth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="@+id/authority_sms"
+        app:layout_constraintTop_toBottomOf="@+id/authority_sms"
+        app:srcCompat="@drawable/image_view_authority_bluetooth" />
+
+    <TextView
+        android:id="@+id/tv_bluetooth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="블루투스"
+        android:textStyle="bold"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@+id/authority_bluetooth"
+        app:layout_constraintTop_toTopOf="@+id/authority_bluetooth" />
+
+    <TextView
+        android:id="@+id/tv_bluetooth_ex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아이캐처 사용자의 경우 아이캐처 설정, 위험 알림 기능과\n 안전 스피커의 음량을 조절할 수 있습니다."
+        android:textSize="10sp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@+id/authority_bluetooth"
+        app:layout_constraintTop_toBottomOf="@+id/tv_bluetooth" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_authrity_next"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/button_loginn"
+        android:text="다음으로"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/authority_bluetooth" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

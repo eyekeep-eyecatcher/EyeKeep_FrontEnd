@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#FFFFFF">
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/image_eyekeep" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="이메일 주소로 아이킾을 등록해 주세요."
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/et_email"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="이메일 주소를 입력해 주세요"
+            android:inputType="textEmailAddress" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_eyekeeep_requet"
+            android:layout_width="60dp"
+            android:layout_height="45dp"
+            android:layout_marginLeft="10dp"
+            android:shadowRadius="1"
+            android:text="보내기"
+            android:textColor="@color/white"
+            android:background="@drawable/button_loginn"
+            android:drawableTint="@color/blue"
+            />
+
+
+    </LinearLayout>
+
+
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="이메일로 아이킵 신청을 보내 상대방이 수락하면 아이킵이 설정됩니다.
+        \n아이킵이 설정되지 않은 계정에 한해 아이킵 신청이 보내집니다."
+        android:textSize="10sp" />
+
+
+
+</LinearLayout>

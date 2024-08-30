@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="eyekeep">
+        <item name="android:textSize">50sp</item>
+        <item name="android:textColor">#1862DD</item>
+    </style>
+
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="ibory">#FDFFE2</color>
+    <color name="blue">#1862DD</color>
+    <color name="white1">#FEF7FF</color>
+    <color name="red">#E02A28</color>
+    <color name="green">#90D26D</color>
+    <color name="gray">#D9D9D9</color>
+    <color name="skyblue">#C8D9F7</color>
+
+
+
+</resources>
